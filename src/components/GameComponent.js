@@ -128,7 +128,7 @@ export default GameComponent = (props) => {
     if (motion) {
       return state.data.length != 0 ? state.data[state.current] : 'Loading..';
     } else {
-      return state.status[state.current] == 2 ? 'Pass' : 'Success'
+      return state.status[state.current] == 2 ? 'Pass !!' : 'Success !!'
     }
   }
 
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   timerText: {
-    fontSize: Math.min(Dimensions.get('window').height, Dimensions.get('window').width) / 8,
+    fontSize: Math.min(Dimensions.get('window').height, Dimensions.get('window').width) / 7,
     color: '#fff',
   }
 });
