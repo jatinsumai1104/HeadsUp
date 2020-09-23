@@ -5,7 +5,7 @@ import { DeviceMotion } from 'expo-sensors';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import useCountDown from 'react-countdown-hook';
 
-const initialTime = 10 * 1000;
+const initialTime = 60 * 1000;
 const interval = 1000;
 const flags = {
   NOT_ARRIVED: 0,
@@ -40,7 +40,7 @@ export default GameComponent = (props) => {
       DeviceMotion.addListener(dm => {
         setDm(dm);
       });
-      DeviceMotion.setUpdateInterval(500);
+      DeviceMotion.setUpdateInterval(300);
     } else {
       DeviceMotion.removeAllListeners();
     }
@@ -93,16 +93,16 @@ export default GameComponent = (props) => {
     if (dm && dm.rotation) {
       let angle = (dm.rotation.gamma * (57.2958)) + 90;
 
-      if (Math.abs(angle) > 45) {
+      if (Math.abs(angle) > 30) {
         setMotion(false);
         pause();
 
         let temp = {
           ...state
         };
-        if (angle < -45) {
+        if (angle < -30) {
           temp.status[temp.current] = flags.SUCCESS;
-        } else if (angle > 45) {
+        } else if (angle > 30) {
           temp.status[temp.current] = flags.PASS;
         }
         temp.attempted = ++temp.attempted;

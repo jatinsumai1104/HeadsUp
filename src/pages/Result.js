@@ -14,7 +14,8 @@ export default Result = ({ route, navigation }) => {
 
   let temp = [];
 
-  let result = 0;
+  let successCount = 0;
+  let passCount = 0;
 
   state.forEach((element, index) => {
     if (state.status === route.params.flags.ARRIVED) {
@@ -22,11 +23,13 @@ export default Result = ({ route, navigation }) => {
     }
     if (element.status == route.params.flags.PASS) {
 
+      passCount++;
+
       temp.push(<Text style={[styles.attemptedText, styles.textRed]} key={index}>{element.text}</Text>);
 
     } else if (element.status === route.params.flags.SUCCESS) {
 
-      result++;
+      successCount++;
 
       temp.push(<Text style={[styles.attemptedText, styles.textGreen]} key={index}>{element.text}</Text>);
 
@@ -42,8 +45,12 @@ export default Result = ({ route, navigation }) => {
         style={[styles.bgImage]}
       >
         <View style={styles.view}>
-          <Text style={styles.text}>Game Over</Text>
-          <Text style={styles.result}>Result: {result}</Text>
+          <Text style={styles.text}>Game Over !!</Text>
+          <Text style={[styles.result, { fontSize: Math.min(Dimensions.get('window').height, Dimensions.get('window').width) / 8, fontStyle: 'italic', fontWeight: 'bold' }]}>Result</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+            <Text style={[styles.result, styles.textGreen]}>Success: {successCount}</Text>
+            <Text style={[styles.result, styles.textRed]}>Pass: {passCount}</Text>
+          </View>
           <ScrollView>
             {temp}
           </ScrollView>
@@ -94,13 +101,17 @@ const styles = StyleSheet.create({
     fontSize: Math.min(Dimensions.get('window').height, Dimensions.get('window').width) / 6,
     color: '#fff',
     textAlign: 'center',
-    marginBottom: 20
+    marginBottom: 20,
+    fontStyle: 'italic', fontWeight: 'bold'
   },
   result: {
     fontSize: Math.min(Dimensions.get('window').height, Dimensions.get('window').width) / 10,
     color: '#fff',
     textAlign: 'center',
-    marginBottom: 20
+    marginBottom: 20,
+    marginHorizontal: 20,
+    alignSelf: 'center',
+    fontStyle: 'italic', fontWeight: 'bold'
   },
   attemptedText: {
     fontSize: Math.min(Dimensions.get('window').height, Dimensions.get('window').width) / 12,

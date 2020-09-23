@@ -1,7 +1,6 @@
 {
   "expo": {
-    "name": "Heads Up!",
-    "slug": "HeadsUp",
+    "name": "HeadsUp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo2.png",
@@ -20,12 +19,11 @@
       "supportsTablet": true,
       "requireFullScreen": true
     },
-    "android": {
-      "package": "com.jatinsumai1104.HeadsUp",
-      "versionCode": 1
-    },
     "web": {
       "favicon": "./assets/images/logo.png"
+    },
+    "android": {
+      "package": "com.jatinsumai1104.HeadsUp"
     }
   }
 }
