@@ -4,7 +4,18 @@ This is a Heads Up Game similar to one available on PlayStore/AppStore
 
 You might know about the popular game 'Heads Up' . The game is similar to Dumb Charades with an interesting feature. While playing the game you hold the phone over your head and the game starts if you want to pass the word and attempt the next word you twist the phone upwards . If your partner guesses the word you twist the phone downwards. This app is similar to the game 'Heads Up' build on React Native.
 
-## APK Download
+## Steps: 
+```sh
+
+$ git clone https://github.com/jatinsumai1104/HeadsUp.git
+$ cd HeadsUp
+$ npm install
+$ Install expo-client on you machine as well as on Remote emulator
+$ expo start
+
+```
+
+## Download APK
 
 To View Demo on Your phone click <a href="apk/headsup.apk" download>here</a> (This will download a .apk file)
 
