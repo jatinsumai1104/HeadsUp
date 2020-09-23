@@ -10,8 +10,8 @@ To View Demo on Your phone click <a href="apk/headsup.apk" download>here</a> (Th
 
 ## Demo
 
-<img src="assets/demo/spalsh.jpg" width="300px">   <img src="assets/demo/home.jpg" width="300px">   <img src="assets/demo/result.jpg" width="300px">
-<img src="assets/demo/game.jpg" width="300px">  <img src="assets/demo/pass.jpg" width="300px">  <img src="assets/demo/success.jpg" width="300px">   
+<img src="assets/demo/spalsh.jpg" width="30%">   <img src="assets/demo/home.jpg" width="30%">   <img src="assets/demo/result.jpg" width="30%">
+<img src="assets/demo/game.jpg" width="30%">  <img src="assets/demo/pass.jpg" width="30%">  <img src="assets/demo/success.jpg" width="30%">   
 
 ## Libraries And Components Used
 
