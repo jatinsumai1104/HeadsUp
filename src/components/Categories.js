@@ -79,7 +79,6 @@ export default class Categories extends React.Component {
     fetchCategories((result) => {
       this.setData(result);
     });
-    // this.setData([['Disney', true, 'Welcome to Disney World', 'Jatin Sumai', 'Sakshi Sumai']]);
   }
 
   setData(result) {

@@ -7,8 +7,8 @@ import * as ScreenOrientation from 'expo-screen-orientation';
 export default Result = ({ route, navigation }) => {
 
   useEffect(() => {
-    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
-  }, []);
+    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_DOWN);
+  });
 
   let state = route.params.data;
 
@@ -16,19 +16,19 @@ export default Result = ({ route, navigation }) => {
 
   let result = 0;
 
-  state.data.forEach((element, index) => {
-    if (state.status[index] === route.params.flags.ARRIVED) {
-      state.status[index] = route.params.flags.PASS;
+  state.forEach((element, index) => {
+    if (state.status === route.params.flags.ARRIVED) {
+      state.status = route.params.flags.PASS;
     }
-    if (state.status[index] === route.params.flags.PASS) {
+    if (element.status == route.params.flags.PASS) {
 
-      temp.push(<Text style={[styles.attemptedText, styles.textRed]} key={index}>{element}</Text>);
+      temp.push(<Text style={[styles.attemptedText, styles.textRed]} key={index}>{element.text}</Text>);
 
-    } else if (state.status[index] === route.params.flags.SUCCESS) {
+    } else if (element.status === route.params.flags.SUCCESS) {
 
       result++;
 
-      temp.push(<Text style={[styles.attemptedText, styles.textGreen]} key={index}>{element}</Text>);
+      temp.push(<Text style={[styles.attemptedText, styles.textGreen]} key={index}>{element.text}</Text>);
 
     }
 

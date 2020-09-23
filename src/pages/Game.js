@@ -10,6 +10,7 @@ import useCountDown from 'react-countdown-hook';
 
 export default Game = ({ route, navigation }) => {
 
+  [isMounted, setMounted] = useState(false);
   [onForehead, setOnForehead] = useState(false);
   const [timeLeft, { start, pause, resume, reset }] = useCountDown(3000, 1000);
 
@@ -18,8 +19,16 @@ export default Game = ({ route, navigation }) => {
     DeviceMotion.addListener(dm => {
       onMotionChange(dm);
     });
+    setMounted(true);
+
+    return () => {
+      componentWillUnMount();
+    }
   }, []);
 
+  useEffect(() => {
+    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT);
+  });
   const onMotionChange = (dm) => {
     if (dm && dm.rotation) {
       let angle = (dm.rotation.gamma * (57.2958)) + 90;
@@ -31,41 +40,56 @@ export default Game = ({ route, navigation }) => {
     }
   }
 
-  if (!onForehead) {
-    return (
-      <Container>
-        <ImageBackground
-          resizeMode="cover"
-          source={require("../../assets/images/bg-white.png")}
-          style={[styles.bgImage, styles.bgBlack]}
-        >
-          <View style={styles.view}>
-            <ScrollView>
-              <Text style={styles.text}>Please Place you Phone on Forehead to start the Game</Text>
-            </ScrollView>
-          </View>
-        </ ImageBackground>
-      </Container >
-    );
-  } else if (timeLeft != 0) {
-    return (
-      <Container>
-        <ImageBackground
-          resizeMode="cover"
-          source={require("../../assets/images/bg-white.png")}
-          style={[styles.bgImage, styles.bgBlack]}
-        >
-          <View style={styles.view}>
-            <Text style={styles.text}>Get Ready!!</Text>
-            <Text style={styles.text} animation="zoomIn">{timeLeft / 1000}</Text>
-          </View>
-        </ ImageBackground>
-      </Container >
-    );
+  useEffect(() => {
+    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT);
+  });
+
+  const componentWillUnMount = () => {
+    DeviceMotion.removeAllListeners();
+    reset();
+    setMounted(false);
+  }
+
+  if (isMounted) {
+    if (!onForehead) {
+      return (
+        <Container>
+          <ImageBackground
+            resizeMode="cover"
+            source={require("../../assets/images/bg-white.png")}
+            style={[styles.bgImage, styles.bgBlack]}
+          >
+            <View style={styles.view}>
+              <ScrollView>
+                <Text style={styles.text}>Please Place you Phone on Forehead to start the Game</Text>
+              </ScrollView>
+            </View>
+          </ ImageBackground>
+        </Container >
+      );
+    } else if (timeLeft != 0) {
+      return (
+        <Container>
+          <ImageBackground
+            resizeMode="cover"
+            source={require("../../assets/images/bg-white.png")}
+            style={[styles.bgImage, styles.bgBlack]}
+          >
+            <View style={styles.view}>
+              <Text style={styles.text}>Get Ready!!</Text>
+              <Text style={styles.text} animation="zoomIn">{timeLeft / 1000}</Text>
+            </View>
+          </ ImageBackground>
+        </Container >
+      );
+    } else {
+      pause();
+      return (
+        <GameComponent data={route.params.data} navigate={navigation.navigate} />
+      )
+    }
   } else {
-    return (
-      <GameComponent data={route.params.data} navigate={navigation.navigate} />
-    )
+    return (<></>);
   }
 }
 const styles = StyleSheet.create({

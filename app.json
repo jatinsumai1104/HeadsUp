@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "HeadsUpClone",
-    "slug": "HeadsUpClone",
+    "name": "Heads Up!",
+    "slug": "HeadsUp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/logo2.png",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/logo2.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000000"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -20,8 +20,12 @@
       "supportsTablet": true,
       "requireFullScreen": true
     },
+    "android": {
+      "package": "com.jatinsumai1104.HeadsUp",
+      "versionCode": 1
+    },
     "web": {
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/logo.png"
     }
   }
 }

@@ -4,7 +4,7 @@ import { Container, Content } from 'native-base';
 
 import Categories from '../components/Categories';
 
-import logo from '../../assets/images/logo3.png';
+import logo from '../../assets/images/logo-home.png';
 
 import * as ScreenOrientation from 'expo-screen-orientation';
 

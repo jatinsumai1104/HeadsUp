@@ -5,9 +5,16 @@ import { DeviceMotion } from 'expo-sensors';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import useCountDown from 'react-countdown-hook';
 
-const initialTime = 5000;
+const initialTime = 10 * 1000;
 const interval = 1000;
+const flags = {
+  NOT_ARRIVED: 0,
+  ARRIVED: 1,
+  PASS: 2,
+  SUCCESS: 3
+}
 
+let result = [];
 export default GameComponent = (props) => {
 
   [motion, setMotion] = useState(true);
@@ -22,19 +29,28 @@ export default GameComponent = (props) => {
   const [timeLeft, { start, pause, resume, reset }] = useCountDown(initialTime, interval);
 
   useEffect(() => {
+    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT);
+  });
+
+  /*
+  * Perform task of Adding or Removing DeviceMotion Listener
+  */
+  useEffect(() => {
     if (motion) {
       DeviceMotion.addListener(dm => {
         setDm(dm);
       });
-      DeviceMotion.setUpdateInterval(300);
+      DeviceMotion.setUpdateInterval(500);
     } else {
       DeviceMotion.removeAllListeners();
     }
   }, [motion]);
 
+  /*
+  * Perform task of componentWillMount
+  */
   useEffect(() => {
     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT);
-    bgColor = styles.bgBlue;
     var temp = {
       current: -1,
       data: props.data,
@@ -43,48 +59,57 @@ export default GameComponent = (props) => {
     };
 
     start();
-    setMotion(true);
+    setTimeout(() => {
+      setMotion(true);
 
-    let nextWordFlag = false;
-    while (!nextWordFlag) {
-      let random_index = Math.floor(Math.random() * state.data.length);
-      if (temp.status[random_index] == flags.NOT_ARRIVED) {
-        var x = temp.status.slice();
-        x[random_index] = flags.ARRIVED;
-        temp = {
-          data: temp.data,
-          current: random_index,
-          status: x,
-          attempted: 0
-        };
-        nextWordFlag = true;
+      let nextWordFlag = false;
+      while (!nextWordFlag) {
+        let random_index = Math.floor(Math.random() * state.data.length);
+        if (temp.status[random_index] == flags.NOT_ARRIVED) {
+          var x = temp.status.slice();
+          x[random_index] = flags.ARRIVED;
+          temp = {
+            data: temp.data,
+            current: random_index,
+            status: x,
+            attempted: 0
+          };
+          nextWordFlag = true;
+        }
       }
+      setState(temp);
+    }, 500);
+
+    return () => {
+      componentWillUnMount();
     }
-    setState(temp);
 
   }, []);
 
+  /*
+  * Handles Device Motion Change
+  */
   useEffect(() => {
     if (dm && dm.rotation) {
       let angle = (dm.rotation.gamma * (57.2958)) + 90;
 
-      if (Math.abs(angle) > 30) {
+      if (Math.abs(angle) > 45) {
         setMotion(false);
         pause();
 
-        let temp = state.status.slice();
-        if (angle < -30) {
-          temp[state.current] = flags.SUCCESS
-          bgColor = styles.bgGreen;
-        } else if (angle > 30) {
-          temp[state.current] = flags.PASS;
-          bgColor = styles.bgRed;
+        let temp = {
+          ...state
+        };
+        if (angle < -45) {
+          temp.status[temp.current] = flags.SUCCESS;
+        } else if (angle > 45) {
+          temp.status[temp.current] = flags.PASS;
         }
-        setState({
-          current: state.current,
-          data: state.data,
-          status: temp,
-          attempted: ++state.attempted
+        temp.attempted = ++temp.attempted;
+        setState(temp);
+        result.push({
+          text: temp.data[state.current],
+          status: state.status[state.current],
         });
 
         setTimeout(() => {
@@ -96,13 +121,24 @@ export default GameComponent = (props) => {
     }
   }, [dm]);
 
-  const flags = {
-    NOT_ARRIVED: 0,
-    ARRIVED: 1,
-    PASS: 2,
-    SUCCESS: 3
+  /*
+  * Perform task of componentWillUnMount
+  */
+  const componentWillUnMount = () => {
+    DeviceMotion.removeAllListeners();
+    reset();
+    setState({
+      current: -1,
+      data: [],
+      status: [],
+      attempted: 0
+    });
+    setDm([]);
   }
 
+  /*
+  * Perform task of getting NextWord and updating the State
+  */
   const getNextWord = () => {
     let nextWordFlag = false;
     let temp = {
@@ -120,10 +156,12 @@ export default GameComponent = (props) => {
       }
     }
     setState(temp);
-    bgColor = styles.bgBlue;
     setMotion(true);
   }
 
+  /*
+  * return => Message to be shown on FrontEnd
+  */
   const getText = () => {
     if (motion) {
       return state.data.length != 0 ? state.data[state.current] : 'Loading..';
@@ -132,6 +170,10 @@ export default GameComponent = (props) => {
     }
   }
 
+
+  /*
+  * return => Image url for background
+  */
   const getSrc = () => {
     if (motion) {
       return require('../../assets/images/blue.png');
@@ -139,10 +181,11 @@ export default GameComponent = (props) => {
       return state.status[state.current] == 2 ? require('../../assets/images/red.png') : require('../../assets/images/green.png');
     }
   }
+
   if (state.data.length != 0 && (timeLeft == 0 || state.data.length <= state.attempted)) {
     DeviceMotion.removeAllListeners();
     props.navigate('Result', {
-      data: state,
+      data: result,
       flags: flags
     });
     return (
@@ -150,7 +193,7 @@ export default GameComponent = (props) => {
     );
   } else {
     return (
-      <Container style={bgColor}>
+      <Container>
         <ImageBackground
           resizeMode="cover"
           source={getSrc()}
@@ -165,7 +208,7 @@ export default GameComponent = (props) => {
             <Text style={styles.timerText}>{timeLeft / 1000}</Text>
           </View>
         </ ImageBackground>
-      </Container>
+      </Container >
     );
   }
 
@@ -205,7 +248,5 @@ const styles = StyleSheet.create({
     color: '#fff',
   }
 });
-
-let bgColor = styles.bgBlue;
 
 
